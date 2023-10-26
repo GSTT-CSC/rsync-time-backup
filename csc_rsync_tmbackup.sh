@@ -388,6 +388,10 @@ fi
 
 # Now strip off last slash from source folder.
 SRC_FOLDER="${SRC_FOLDER%/}"
+
+# Gets folder name i.e., user, for backups and logs to be stored in user-specific folders
+USER="$(basename -- "$SRC_FOLDER")"
+
 for ARG in "$SRC_FOLDER" "$DEST_FOLDER" "$EXCLUSION_FILE"; do
 	if [[ "$ARG" == *"'"* ]]; then
 		fn_log_error 'Source and destination directories may not contain single quote characters.'
@@ -448,9 +452,12 @@ MYPID="$$"
 # -----------------------------------------------------------------------------
 # Create log folder if it doesn't exist
 # -----------------------------------------------------------------------------
+# Create a user-specific log directory
+LOG_DIR="$LOG_DIR/$USER"
+
 if [ ! -d "$LOG_DIR" ]; then
 	fn_log_info "Creating log folder in '$LOG_DIR'..."
-	mkdir -- "$LOG_DIR"
+	mkdir -p "$LOG_DIR"
 fi
 
 # -----------------------------------------------------------------------------
